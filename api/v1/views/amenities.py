@@ -36,13 +36,12 @@ def delete_amenity(amenity_id):
 
 @app_views.route('/amenities', methods=['POST'],
                  strict_slashes=False)
-def post_amenity(state_id):
+def post_amenity():
     data = request.get_json(silent=True)
     if data is None:
         return {"error": "Not a JSON"}, 400
     if "name" not in data:
         return {"error": "Missing name"}, 400
-    data['state_id'] = state_id
     amenity = Amenity(**data)
     amenity.save()
     return jsonify(amenity.to_dict()), 201
