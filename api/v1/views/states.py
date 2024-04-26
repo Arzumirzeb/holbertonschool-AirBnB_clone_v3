@@ -31,7 +31,7 @@ def delete_obj(state_id):
     return jsonify({}), 200
 
 
-@app_views.route('/api/v1/states', methods=['POST'], strict_slashes=False)
+@app_views.route('/api/v1/states/', methods=['POST'], strict_slashes=False)
 def create_state():
     state = request.get_json()
     if state is None:
