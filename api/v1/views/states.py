@@ -47,7 +47,7 @@ def create_state():
 @app_views.route('/api/v1/states/<state_id>', methods=['PUT'])
 def update_state(state_id):
     state = request.get_json()
-    the_id= storage.get(State, state_id)
+    the_id = storage.get(State, state_id)
     if state is None:
         return jsonify({"error": "Not a JSON"}), 400
     if the_id is None:
