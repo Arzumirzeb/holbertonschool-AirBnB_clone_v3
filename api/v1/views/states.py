@@ -9,11 +9,11 @@ from models.state import State
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def list_of_all_state():
-    states = storage.all("States")
+    states = storage.all("State")
     return jsonify([state.to_dict() for state in states.values()])
 
 
-@app_views.route('/states/<state_id>', methods=['GET'])
+@app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def get_id(state_id):
     state = storage.get(State, state_id)
     if state is None:
@@ -21,7 +21,8 @@ def get_id(state_id):
     return jsonify(state.to_dict())
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'])
+@app_views.route('/states/<state_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_obj(state_id):
     state = storage.get(State, state_id)
     if state is None:
@@ -33,26 +34,26 @@ def delete_obj(state_id):
 
 @app_views.route('/states/', methods=['POST'], strict_slashes=False)
 def create_state():
-    state = request.get_json()
+    state = request.get_json(silent=True)
     if state is None:
         return jsonify({"error": "Not a JSON"}), 400
     if "name" not in state.keys():
         return jsonify({"error": "Missing name"}), 400
     new_state = State(name=state['name'])
-    state.new(new_state)
-    state.save()
+    storage.new(new_state)
+    storage.save()
     return jsonify(new_state.to_dict()), 201
 
 
-@app_views.route('/states/<state_id>', methods=['PUT'])
+@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
-    state = request.get_json()
+    states = request.get_json(silent=True)
     the_id = storage.get(State, state_id)
-    if state is None:
+    if states is None:
         return jsonify({"error": "Not a JSON"}), 400
     if the_id is None:
         return abort(404)
-    for key, value in state.items():
+    for key, value in states.items():
         if key not in ["id", "created_at", "updated_at"]:
             setattr(state, key, value)
     storage.save()
