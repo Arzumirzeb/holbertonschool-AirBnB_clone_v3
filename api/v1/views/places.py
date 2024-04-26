@@ -15,7 +15,7 @@ def get_places_with_id(city_id):
     city = storage.get(City, city_id)
     if city is None:
         return {"error": "Not found"}, 404
-    return [place.to_dict() for place in city.cities]
+    return [place.to_dict() for place in city.places]
 
 
 @app_views.route('/places/<place_id>', methods=['GET'],
