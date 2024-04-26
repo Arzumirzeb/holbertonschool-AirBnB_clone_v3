@@ -1,31 +1,26 @@
 #!/usr/bin/python3
-""" holds class State"""
-import models
-from models.base_model import BaseModel, Base
+""" State Module for HBNB project """
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from models.base_model import Base, BaseModel
 from models.city import City
 from os import getenv
-import sqlalchemy
-from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy.orm import relationship
+import models
 
 
 class State(BaseModel, Base):
-    """Representation of state """
-    if models.storage_t == "db":
-        __tablename__ = 'states'
-        name = Column(String(128), nullable=False)
-        cities = relationship("City", backref="state")
-    else:
-        name = ""
+    """State Model"""
 
-    def __init__(self, *args, **kwargs):
-        """initializes state"""
-        super().__init__(*args, **kwargs)
+    __tablename__ = "states"
 
-    if models.storage_t != "db":
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    cities: Mapped[list["City"]] = relationship("City", backref="state",
+                                                cascade="delete")
+    if getenv("HBNB_TYPE_STORAGE") != "db":
         @property
         def cities(self):
-            """getter for list of city instances related to the state"""
+            """Get a list of all linked City objects."""
             city_list = []
             for city in list(models.storage.all(City).values()):
                 if city.state_id == self.id:
