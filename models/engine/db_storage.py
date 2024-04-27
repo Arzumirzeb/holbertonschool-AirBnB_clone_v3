@@ -16,6 +16,7 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+
 classes = {"Amenity": Amenity, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
@@ -72,14 +73,16 @@ class DBStorage:
         self.__session = Session
 
     def get(self, cls, id):
-        """get function"""
-        key = f"{cls.__name__}.{id}"
-        if isinstance(self.all().get(key), cls):
-            return self.all().get(key)
-        return None
+        '''retrieve one object'''
+        if cls is None or id is None:
+            return None
+        objs = self.all(cls)
+        for obj in objs.values():
+            if obj.id == id:
+                return obj
 
     def count(self, cls=None):
-        """count funtion"""
+        '''count the number of objects in storage'''
         return len(self.all(cls))
 
     def close(self):

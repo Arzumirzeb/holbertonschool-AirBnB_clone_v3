@@ -66,14 +66,16 @@ class FileStorage:
                 del self.__objects[key]
 
     def get(self, cls, id):
-        """get function"""
-        key = f"{cls.__name__}.{id}"
-        if isinstance(self.__objects.get(key), cls):
+        """retrieve one object"""
+        if cls is not None and id is not None:
+            if type(cls) is str:
+                key = cls + '.' + id
+            else:
+                key = cls.__name__ + '.' + id
             return self.__objects.get(key)
-        return None
 
     def count(self, cls=None):
-        """count funtion"""
+        """count the number of objects in storage"""
         return len(self.all(cls))
 
     def close(self):
