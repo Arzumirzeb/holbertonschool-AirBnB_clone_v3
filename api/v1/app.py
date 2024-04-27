@@ -17,8 +17,8 @@ app.register_blueprint(app_views)
 def teardown(exc):
     storage.close()
 
-cors = CORS(app, resources={r"/api/v1/*": {"origins": "0.0.0.0"}})
 
+cors = CORS(app, resources={r"/api/v1/*": {"origins": "0.0.0.0"}})
 
 
 @app.errorhandler(404)
