@@ -53,6 +53,7 @@ def review_post(place_id):
         return abort(404)
     if 'text' not in data:
         return jsonify({"error": "Missing text"}), 400
+    data['place_id'] = place_id
     review = Review(**data)
     review.save()
     return jsonify(review.to_dict()), 201
